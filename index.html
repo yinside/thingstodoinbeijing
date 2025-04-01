@@ -1,1 +1,1824 @@
-hello, world!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beijing Explorer | Top Things to Do in China's Capital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .activity-card {
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        #map-container {
+            height: 400px;
+            background-color: #e5e7eb;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+
+        /* Page transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center" onclick="showPage('home')">
+                        <i class="fas fa-map-marked-alt text-blue-500 text-2xl mr-2"></i>
+                        <span class="font-bold text-xl text-gray-800">Beijing Explorer</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-link text-blue-600 font-medium" onclick="showPage('home')">Home</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-blue-600 transition" onclick="showPage('activities')">Things to Do</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-blue-600 transition" onclick="showPage('culture')">Culture Guide</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-blue-600 transition" onclick="showPage('tips')">Travel Tips</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-blue-600 transition" onclick="showPage('contact')">Contact</a>
+                </div>
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-3 space-y-3">
+                <a href="#" class="block nav-link text-blue-600 font-medium" onclick="showPage('home')">Home</a>
+                <a href="#" class="block nav-link text-gray-600 hover:text-blue-600" onclick="showPage('activities')">Things to Do</a>
+                <a href="#" class="block nav-link text-gray-600 hover:text-blue-600" onclick="showPage('culture')">Culture Guide</a>
+                <a href="#" class="block nav-link text-gray-600 hover:text-blue-600" onclick="showPage('tips')">Travel Tips</a>
+                <a href="#" class="block nav-link text-gray-600 hover:text-blue-600" onclick="showPage('contact')">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page active">
+        <!-- Hero Section -->
+        <div class="hero flex items-center justify-center text-center text-white">
+            <div class="px-6 max-w-4xl">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fadeIn">Discover Beijing's Wonders</h1>
+                <p class="text-xl md:text-2xl mb-8">Explore the best attractions, hidden gems, and cultural experiences in China's captivating capital.</p>
+                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition transform hover:scale-105" onclick="showPage('activities')">
+                    Explore Activities <i class="fas fa-arrow-down ml-2"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Facts -->
+        <div class="bg-blue-600 text-white py-8">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center p-4">
+                        <i class="fas fa-landmark text-3xl mb-3"></i>
+                        <h3 class="font-bold text-xl">7 UNESCO Sites</h3>
+                        <p class="text-blue-100">Including the Great Wall & Forbidden City</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <i class="fas fa-utensils text-3xl mb-3"></i>
+                        <h3 class="font-bold text-xl">3000+ Years</h3>
+                        <p class="text-blue-100">Of rich history and culinary tradition</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <i class="fas fa-subway text-3xl mb-3"></i>
+                        <h3 class="font-bold text-xl">World-Class</h3>
+                        <p class="text-blue-100">Public transportation system</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <i class="fas fa-calendar-alt text-3xl mb-3"></i>
+                        <h3 class="font-bold text-xl">Year-Round</h3>
+                        <p class="text-blue-100">Activities and festivals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 py-12">
+
+            <!-- Activity Categories -->
+            <section id="activities" class="mb-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Top Things to Do in Beijing</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">From ancient wonders to modern marvels, Beijing offers unforgettable experiences for every traveler.</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 active transition" data-category="all">All Activities</button>
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="history">Historical</button>
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="culture">Cultural</button>
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="food">Food</button>
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="modern">Modern</button>
+                    <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="nature">Nature</button>
+                </div>
+
+                <div id="activities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+                <div class="text-center mt-10">
+                    <a href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition" onclick="showPage('activities')">
+                        View All Activities <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Culture Guide -->
+            <section id="culture" class="mb-16 bg-gray-100 rounded-2xl p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Beijing Culture Guide</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Essential tips to understand and appreciate Beijing's rich cultural heritage.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-hands-helping text-blue-500 text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2">Etiquette & Customs</h3>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Greet with a slight nod or handshake</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Accept business cards with both hands</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Avoid pointing with fingers - use open hand</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Remove shoes when entering someone's home</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-utensils text-blue-500 text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2">Dining Culture</h3>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Try Peking duck - Beijing's most famous dish</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Don't be surprised by loud eating sounds</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Turn lazy susan clockwise when sharing dishes</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Leaving a little food shows you're satisfied</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-language text-blue-500 text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2">Useful Mandarin Phrases</h3>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Hello - Nǐ hǎo (你好)</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Thank you - Xièxiè (谢谢)</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> How much? - Duōshǎo qián? (多少钱?)</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Delicious - Hěn hǎochī (很好吃)</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Where is...? - ...zài nǎlǐ? (...在哪里?)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-start mb-4">
+                            <i class="fas fa-exclamation-triangle text-blue-500 text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-xl mb-2">Taboos to Avoid</h3>
+                                <ul class="space-y-2 text-gray-600">
+                                    <li><i class="fas fa-times-circle text-red-500 mr-2"></i> Don't stick chopsticks upright in rice</li>
+                                    <li><i class="fas fa-times-circle text-red-500 mr-2"></i> Avoid discussing sensitive political topics</li>
+                                    <li><i class="fas fa-times-circle text-red-500 mr-2"></i> Never write in red ink (signifies death)</li>
+                                    <li><i class="fas fa-times-circle text-red-500 mr-2"></i> Don't whistle at night (attracts ghosts)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <a href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition" onclick="showPage('culture')">
+                        Full Culture Guide <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Seasonal Highlights -->
+            <section class="mb-16">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Seasonal Highlights</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Beijing offers unique experiences in every season.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-spring h-40 bg-gradient-to-b from-green-400 to-green-300 flex items-center justify-center">
+                            <i class="fas fa-seedling text-white text-5xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Spring</h3>
+                            <p class="text-gray-600 mb-4">Best time to see cherry blossoms at Yuyuantan Park and enjoy pleasant weather.</p>
+                            <ul class="space-y-2 text-sm text-gray-500">
+                                <li><i class="fas fa-calendar-alt mr-2 text-blue-500"></i> March - May</li>
+                                <li><i class="fas fa-temperature-low mr-2 text-blue-500"></i> 10°C - 25°C</li>
+                                <li><i class="fas fa-calendar-check mr-2 text-blue-500"></i> Temple fairs around Chinese New Year</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-summer h-40 bg-gradient-to-b from-yellow-400 to-yellow-300 flex items-center justify-center">
+                            <i class="fas fa-sun text-white text-5xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Summer</h3>
+                            <p class="text-gray-600 mb-4">Ideal for visiting the Great Wall early mornings or enjoying night markets.</p>
+                            <ul class="space-y-2 text-sm text-gray-500">
+                                <li><i class="fas fa-calendar-alt mr-2 text-blue-500"></i> June - August</li>
+                                <li><i class="fas fa-temperature-low mr-2 text-blue-500"></i> 22°C - 35°C</li>
+                                <li><i class="fas fa-calendar-check mr-2 text-blue-500"></i> Dragon Boat Festival in June</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-autumn h-40 bg-gradient-to-b from-orange-400 to-orange-300 flex items-center justify-center">
+                            <i class="fas fa-leaf text-white text-5xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Autumn</h3>
+                            <p class="text-gray-600 mb-4">Perfect weather and stunning fall foliage in Fragrant Hills Park.</p>
+                            <ul class="space-y-2 text-sm text-gray-500">
+                                <li><i class="fas fa-calendar-alt mr-2 text-blue-500"></i> September - November</li>
+                                <li><i class="fas fa-temperature-low mr-2 text-blue-500"></i> 10°C - 22°C</li>
+                                <li><i class="fas fa-calendar-check mr-2 text-blue-500"></i> Mid-Autumn Festival in September/October</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-winter h-40 bg-gradient-to-b from-gray-400 to-gray-300 flex items-center justify-center">
+                            <i class="fas fa-snowflake text-white text-5xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Winter</h3>
+                            <p class="text-gray-600 mb-4">Experience snow-covered temples and enjoy hot pot to stay warm.</p>
+                            <ul class="space-y-2 text-sm text-gray-500">
+                                <li><i class="fas fa-calendar-alt mr-2 text-blue-500"></i> December - February</li>
+                                <li><i class="fas fa-temperature-low mr-2 text-blue-500"></i> -10°C - 5°C</li>
+                                <li><i class="fas fa-calendar-check mr-2 text-blue-500"></i> Chinese New Year (dates vary)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Travel Tips -->
+            <section id="tips" class="mb-16 bg-blue-50 rounded-2xl p-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Essential Travel Tips</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Make the most of your Beijing adventure with these practical tips.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-phone-alt text-blue-500 mr-3"></i> 
+                            Connectivity
+                        </h3>
+                        <p class="text-gray-600">Download WeChat (essential for mobile payments and communication). Purchase a local SIM card at the airport for much cheaper data.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-subway text-blue-500 mr-3"></i> 
+                            Transportation
+                        </h3>
+                        <p class="text-gray-600">Get a rechargeable Yikatong card for subway and buses. Didi (Chinese Uber) is more reliable than hailing taxis. Subway maps are available in English.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-money-bill-wave text-blue-500 mr-3"></i> 
+                            Money
+                        </h3>
+                        <p class="text-gray-600">Cash is still used in smaller establishments. Alipay and WeChat Pay dominate digital payments. Inform your bank before traveling.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-cloud text-blue-500 mr-3"></i> 
+                            Air Quality
+                        </h3>
+                        <p class="text-gray-600">Check AQI levels daily. Masks may be needed when pollution is high. Many hotels provide air purifiers.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-passport text-blue-500 mr-3"></i> 
+                            Documentation
+                        </h3>
+                        <p class="text-gray-600">Always carry your passport (needed for hotel check-ins and ticket purchases). Have digital copies stored securely.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-globe-asia text-blue-500 mr-3"></i> 
+                            Internet Access
+                        </h3>
+                        <p class="text-gray-600">Install a reliable VPN before arrival (Google, Facebook etc. are blocked). Hotel WiFi is usually unrestricted.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <a href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition" onclick="showPage('tips')">
+                        View All Travel Tips <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Map Section -->
+            <section class="mb-16">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Beijing's Top Attractions Map</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto mb-6">Visual guide to the city's must-see locations and their proximity to each other.</p>
+                </div>
+                
+                <div id="map-container" class="rounded-xl shadow-lg relative overflow-hidden">
+                    <!-- This would be replaced with an actual map in production -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center text-gray-500 p-4">
+                            <i class="fas fa-map-marked-alt text-5xl mb-4 text-blue-500"></i>
+                            <h3 class="text-xl font-bold mb-2">Beijing Attractions Map</h3>
+                            <p>Interactive map showing all major attractions, their locations, and suggested itineraries would appear here.</p>
+                        </div>
+                    </div>
+                    <!-- Map markers would be added here with JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Testimonials -->
+        <section class="bg-gray-100 py-16 mb-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Traveler Experiences</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Hear what visitors say about their Beijing adventures.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold">Sarah M.</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"Walking on the Great Wall was the highlight of my life! We visited the Mutianyu section which was less crowded. The cable car up and toboggan ride down made it even more fun."</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="James" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold">James L.</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"The Forbidden City was mesmerizing, but very crowded. Go early! Afterwards, we walked to Jingshan Park for the best view over the rooftops - absolutely worth it."</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center mb-4">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Fatima" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h4 class="font-bold">Fatima K.</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"The Hutongs are amazing! We took a rickshaw tour and learned so much about old Beijing. The local family lunch in a courtyard home was the best meal we had."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="bg-blue-600 text-white py-16 mb-16">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-4">Plan Your Beijing Adventure</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">Get our free guide with seasonal itineraries, hidden gems, and local insights delivered to your inbox.</p>
+                
+                <form class="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    <button type="submit" class="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold px-6 py-3 rounded-lg transition transform hover:scale-105">
+                        Get the Guide <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </form>
+                
+                <p class="text-blue-100 text-sm mt-4">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="mb-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <div class="bg-blue-600 text-white p-8 md:p-12">
+                            <h2 class="text-3xl font-bold mb-6">Questions About Beijing?</h2>
+                            <p class="mb-6 text-blue-100">Our local experts are happy to help plan your perfect trip to China's capital.</p>
+                            
+                            <div class="space-y-5">
+                                <div class="flex items-start">
+                                    <i class="fas fa-envelope text-xl mr-4 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-bold mb-1">Email Us</h4>
+                                        <p>info@beijingexplorer.com</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <i class="fas fa-phone-alt text-xl mr-4 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-bold mb-1">Call Us</h4>
+                                        <p>+86 10 1234 5678</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <i class="fas fa-map-marker-alt text-xl mr-4 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-bold mb-1">Visit Us</h4>
+                                        <p>123 Tourism Street, Dongcheng District, Beijing</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <h4 class="font-bold mb-4">Follow Us</h4>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="bg-blue-500 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition">
+                                        <i class="fab fa-weibo"></i>
+                                    </a>
+                                    <a href="#" class="bg-blue-500 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition">
+                                        <i class="fab fa-weixin"></i>
+                                    </a>
+                                    <a href="#" class="bg-blue-500 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="bg-blue-500 hover:bg-blue-400 w-10 h-10 rounded-full flex items-center justify-center transition">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-8 md:p-12">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                            <form class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-gray-700 mb-2">Name</label>
+                                    <input type="text" id="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="email" class="block text-gray-700 mb-2">Email</label>
+                                    <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="subject" class="block text-gray-700 mb-2">Subject</label>
+                                    <select id="subject" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option>General Inquiry</option>
+                                        <option>Trip Planning</option>
+                                        <option>Group Tours</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="message" class="block text-gray-700 mb-2">Message</label>
+                                    <textarea id="message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full transition">
+                                    Send Message <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Things To Do Page -->
+    <div id="activities-page" class="page">
+        <div class="bg-gray-100 py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">Things To Do in Beijing</h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">Discover the best activities and attractions in China's capital city</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 active transition" data-category="all">All Activities</button>
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="history">Historical</button>
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="culture">Cultural</button>
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="food">Food</button>
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="modern">Modern</button>
+                <button class="category-btn px-6 py-2 rounded-full border border-blue-500 text-blue-500 hover:bg-blue-50 transition" data-category="nature">Nature</button>
+            </div>
+
+            <div id="full-activities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div class="bg-gray-100 py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Need Help Planning?</h2>
+                        <p class="text-gray-600 mb-6">Our local experts can create a personalized itinerary based on your interests, budget and travel style.</p>
+                        <a href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition" onclick="showPage('contact')">
+                            Contact Us <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4">Popular Itineraries</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">Classic Beijing in 3 Days</h4>
+                                    <p class="text-gray-600 text-sm">Forbidden City, Great Wall, Summer Palace, Temple of Heaven</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">Foodie Adventure</h4>
+                                    <p class="text-gray-600 text-sm">Peking duck, street food tour, hutong breakfast, tea ceremony</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">Family Fun Package</h4>
+                                    <p class="text-gray-600 text-sm">Great Wall toboggan, Beijing Zoo, acrobatics show, science museum</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Culture Guide Page -->
+    <div id="culture-page" class="page">
+        <div class="bg-blue-600 text-white py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold mb-4">Beijing Culture Guide</h1>
+                    <p class="text-xl max-w-2xl mx-auto">Understanding local customs and traditions to enhance your travel experience</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-red-500 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-exclamation-circle mr-3"></i>
+                            Cultural Do's and Don'ts
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="font-bold text-lg mb-3 text-green-600">Do's</h3>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                        <span>Accept gifts with both hands</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                        <span>Try some basic Mandarin greetings</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                        <span>Respect elders and authority figures</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                                        <span>Eat with chopsticks when offered</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-3 text-red-600">Don'ts</h3>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i>
+                                        <span>Discuss sensitive political topics</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i>
+                                        <span>Point with your index finger</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i>
+                                        <span>Stick chopsticks upright in rice</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-times-circle text-red-500 mr-2 mt-1"></i>
+                                        <span>Tip in restaurants (it's not customary)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-yellow-500 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-language mr-3"></i>
+                            Essential Mandarin Phrases
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">English</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mandarin</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pronunciation</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Hello</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">你好</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Nǐ hǎo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Thank you</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">谢谢</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Xièxiè</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">How much?</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">多少钱?</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Duōshǎo qián?</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Delicious</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">很好吃</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Hěn hǎochī</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Where is...?</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">...在哪里?</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">...zài nǎlǐ?</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Bathroom</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">洗手间</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Xǐshǒujiān</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-purple-500 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-utensils mr-3"></i>
+                            Dining Etiquette
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="bg-purple-100 text-purple-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Seating Arrangements</h3>
+                                    <p class="text-gray-600 text-sm">The host typically sits facing the door, with honored guests seated closest to them.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-purple-100 text-purple-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-glass-cheers"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Toasting</h3>
+                                    <p class="text-gray-600 text-sm">When toasting, the junior person should hold their glass lower than the senior person's glass.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-purple-100 text-purple-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-spoon"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Eating</h3>
+                                    <p class="text-gray-600 text-sm">It's polite to try a little of everything served and to leave a small amount of food to show you're satisfied.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-purple-100 text-purple-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Other Customs</h3>
+                                    <p class="text-gray-600 text-sm">Burping and slurping noodles are considered compliments to the chef!</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-green-500 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-hands-helping mr-3"></i>
+                            Social Customs
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="bg-green-100 text-green-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Greetings</h3>
+                                    <p class="text-gray-600 text-sm">Handshakes are common, sometimes followed by a slight nod. Avoid prolonged eye contact.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-green-100 text-green-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Gifts</h3>
+                                    <p class="text-gray-600 text-sm">Always give and receive gifts with both hands. Wrapped gifts are typically not opened immediately.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-green-100 text-green-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Business</h3>
+                                    <p class="text-gray-600 text-sm">Business cards should be presented with both hands, and received with both hands and carefully examined.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-green-100 text-green-800 rounded-full p-2 mr-3">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Visiting Homes</h3>
+                                    <p class="text-gray-600 text-sm">Remove shoes before entering, and consider bringing a small gift like fruit or tea.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-indigo-500 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-calendar-alt mr-3"></i>
+                            Festivals & Holidays
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-indigo-400 pl-4 py-1">
+                                <h3 class="font-bold text-gray-800">Chinese New Year</h3>
+                                <p class="text-gray-600 text-sm">January/February - Red decorations, family reunions, fireworks</p>
+                            </div>
+                            <div class="border-l-4 border-indigo-400 pl-4 py-1">
+                                <h3 class="font-bold text-gray-800">Qingming Festival</h3>
+                                <p class="text-gray-600 text-sm">April - Honoring ancestors, tomb sweeping, outdoor activities</p>
+                            </div>
+                            <div class="border-l-4 border-indigo-400 pl-4 py-1">
+                                <h3 class="font-bold text-gray-800">Dragon Boat Festival</h3>
+                                <p class="text-gray-600 text-sm">June - Boat races, zongzi (sticky rice dumplings)</p>
+                            </div>
+                            <div class="border-l-4 border-indigo-400 pl-4 py-1">
+                                <h3 class="font-bold text-gray-800">Mid-Autumn Festival</h3>
+                                <p class="text-gray-600 text-sm">September - Moon cakes, moon gazing, family gatherings</p>
+                            </div>
+                            <div class="border-l-4 border-indigo-400 pl-4 py-1">
+                                <h3 class="font-bold text-gray-800">National Day</h3>
+                                <p class="text-gray-600 text-sm">October 1 - Parades, patriotic displays, week-long holiday</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 rounded-xl p-8 mb-16">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Cultural Experiences To Try</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Immerse yourself in Beijing's rich cultural traditions</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-mask text-blue-500 mr-3"></i> 
+                            Beijing Opera
+                        </h3>
+                        <p class="text-gray-600">Experience this traditional art form with elaborate costumes, acrobatics and unique singing styles at Liyuan Theatre.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-chess-knight text-blue-500 mr-3"></i> 
+                            Tea Ceremony
+                        </h3>
+                        <p class="text-gray-600">Learn the art of Chinese tea preparation at Maliandao Tea Street or a traditional tea house in the hutongs.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-brush text-blue-500 mr-3"></i> 
+                            Calligraphy Class
+                        </h3>
+                        <p class="text-gray-600">Take a workshop to learn this ancient writing art, often offered at cultural centers and some temples.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-drum text-blue-500 mr-3"></i> 
+                            Taichi in the Park
+                        </h3>
+                        <p class="text-gray-600">Join locals at dawn in Temple of Heaven Park or Ritan Park for this meditative martial art.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-dumbbell text-blue-500 mr-3"></i> 
+                            Kung Fu Show
+                        </h3>
+                        <p class="text-gray-600">Watch impressive martial arts performances at the Red Theatre or Zhengyici Peking Opera Theatre.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-lg mb-3 flex items-center">
+                            <i class="fas fa-pagoda text-blue-500 mr-3"></i> 
+                            Temple Visit
+                        </h3>
+                        <p class="text-gray-600">Experience Buddhist rituals at Lama Temple or Taoist ceremonies at White Cloud Temple.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Travel Tips Page -->
+    <div id="tips-page" class="page">
+        <div class="bg-yellow-500 text-white py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold mb-4">Beijing Travel Tips</h1>
+                    <p class="text-xl max-w-2xl mx-auto">Practical advice to make your trip smoother and more enjoyable</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div class="md:col-span-2 bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-blue-600 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-passport mr-3"></i>
+                            Before You Go
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div class="flex">
+                                <div class="bg-blue-100 text-blue-800 rounded-full h-10 w-10 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-passport"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800 mb-1">Visa Requirements</h3>
+                                    <p class="text-gray-600">Most visitors need a visa to enter China. Apply at your nearest Chinese embassy/consulate at least 1 month before travel. Tourism visas typically allow 30-90 day stays.</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="bg-blue-100 text-blue-800 rounded-full h-10 w-10 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800 mb-1">Best Time to Visit</h3>
+                                    <p class="text-gray-600">Spring (April-May) and autumn (September-October) offer the most pleasant weather. Summer can be hot/humid while winter is cold but less crowded.</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="bg-blue-100 text-blue-800 rounded-full h-10 w-10 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-suitcase"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800 mb-1">What to Pack</h3>
+                                    <p class="text-gray-600">Comfortable walking shoes, face masks (for pollution), adapter plugs (China uses Type A/C/I), VPN installed on devices before arrival.</p>
+                                </div>
+                            </div>
+                            <div class="flex">
+                                <div class="bg-blue-100 text-blue-800 rounded-full h-10 w-10 flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-wifi"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-800 mb-1">Tech Preparations</h3>
+                                    <p class="text-gray-600">Install WeChat (essential for communication), Alipay (for mobile payments), VPN (to access blocked sites), and translation apps.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-green-600 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-money-bill-wave mr-3"></i>
+                            Money Matters
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2 flex items-center">
+                                    <i class="fas fa-money-bill-alt text-green-500 mr-2"></i>
+                                    Currency
+                                </h3>
+                                <p class="text-gray-600">China uses Renminbi (RMB) with units called Yuan (¥). Current exchange rate is about 6.5-7 yuan to 1 USD.</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2 flex items-center">
+                                    <i class="fas fa-credit-card text-green-500 mr-2"></i>
+                                    Payment Methods
+                                </h3>
+                                <p class="text-gray-600">Mobile payments (Alipay/WeChat Pay) dominate. Cards accepted at hotels/large stores. Always carry some cash for small businesses.</p>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2 flex items-center">
+                                    <i class="fas fa-exchange-alt text-green-500 mr-2"></i>
+                                    Exchanging Money
+                                </h3>
+                                <ul class="text-gray-600 list-disc pl-5 space-y-2">
+                                    <li>Banks offer best rates (bring passport)</li>
+                                    <li>Avoid airport exchanges (poor rates)</li>
+                                    <li>ATMs widely available (notify bank first)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2 flex items-center">
+                                    <i class="fas fa-coins text-green-500 mr-2"></i>
+                                    Tipping
+                                </h3>
+                                <p class="text-gray-600">Not customary in China. Some high-end restaurants/hotels may add service charge. Tour guides/drivers appreciate small tips.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-purple-600 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-subway mr-3"></i>
+                            Getting Around
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2">Public Transportation</h3>
+                                <div class="pl-4 space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-gray-700 flex items-center">
+                                            <i class="fas fa-train text-purple-500 mr-2"></i>
+                                            Subway
+                                        </h4>
+                                        <p class="text-gray-600 text-sm">Extensive network covering most tourist sites. Buy single-journey tickets or Yikatong card (¥20 deposit +充值).</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700 flex items-center">
+                                            <i class="fas fa-bus text-purple-500 mr-2"></i>
+                                            Buses
+                                        </h4>
+                                        <p class="text-gray-600 text-sm">Cheap but challenging without Chinese. Yikatong card works on buses too.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700 flex items-center">
+                                            <i class="fas fa-taxi text-purple-500 mr-2"></i>
+                                            Taxis/Didi
+                                        </h4>
+                                        <p class="text-gray-600 text-sm">Didi (Chinese Uber) is easier than street taxis. Have your destination in Chinese characters.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2">From the Airport</h3>
+                                <div class="pl-4 space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Airport Express Train</h4>
+                                        <p class="text-gray-600 text-sm">Connects to subway network (Line 2/10/13). Takes about 30 min to city center, ¥25.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Taxis</h4>
+                                        <p class="text-gray-600 text-sm">Official queue outside arrivals. Fare to city center about ¥100-150 plus ¥10 toll.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Shuttle Buses</h4>
+                                        <p class="text-gray-600 text-sm">Operate to major hotels and transit points, ¥16-30 depending on distance.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-red-600 text-white p-6">
+                        <h2 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-user-shield mr-3"></i>
+                            Health & Safety
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2">Health Concerns</h3>
+                                <div class="pl-4 space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Air Pollution</h4>
+                                        <p class="text-gray-600 text-sm">Check AQI daily. N95 masks recommended when pollution is high (AQI > 150).</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Tap Water</h4>
+                                        <p class="text-gray-600 text-sm">Not drinkable. Use bottled water even for brushing teeth in some areas.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-700">Travel Insurance</h4>
+                                        <p class="text-gray-600 text-sm">Recommended to cover medical evacuation. Hospitals require upfront payment.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2">Safety Tips</h3>
+                                <div class="pl-4 space-y-3">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                        <p class="text-gray-600 text-sm">Keep passport with you at all times (required for ticket purchases)</p>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                        <p class="text-gray-600 text-sm">Beware of common scams (tea ceremony, art students)</p>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                        <p class="text-gray-600 text-sm">Carry hotel card in Chinese for taxi rides back</p>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                        <p class="text-gray-600 text-sm">Use official taxis (marked with company name/number)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800 mb-2">Emergency Numbers</h3>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-red-100 p-3 rounded-lg">
+                                        <h4 class="font-bold text-red-700">Police</h4>
+                                        <p class="text-gray-800 font-mono">110</p>
+                                    </div>
+                                    <div class="bg-red-100 p-3 rounded-lg">
+                                        <h4 class="font-bold text-red-700">Ambulance</h4>
+                                        <p class="text-gray-800 font-mono">120</p>
+                                    </div>
+                                    <div class="bg-red-100 p-3 rounded-lg">
+                                        <h4 class="font-bold text-red-700">Fire</h4>
+                                        <p class="text-gray-800 font-mono">119</p>
+                                    </div>
+                                    <div class="bg-red-100 p-3 rounded-lg">
+                                        <h4 class="font-bold text-red-700">Traffic Accidents</h4>
+                                        <p class="text-gray-800 font-mono">122</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-16">
+                <div class="bg-indigo-600 text-white p-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-info-circle mr-3"></i>
+                        Other Useful Information
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-3">Language</h3>
+                            <p class="text-gray-600 mb-4">English isn't widely spoken. Learn basic Mandarin phrases and have your hotel name/destinations written in Chinese.</p>
+                            <div class="flex items-center bg-indigo-50 p-4 rounded-lg">
+                                <div class="bg-indigo-100 text-indigo-800 rounded-full h-12 w-12 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-language text-xl"></i>
+                                </div>
+                                <p class="text-gray-700">Use translation apps like Google Translate (download Chinese pack offline) or Pleco.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-3">Internet Access</h3>
+                            <p class="text-gray-600 mb-4">Many Western sites (Google, Facebook, etc.) are blocked in China. Essential to install VPN before arrival.</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-indigo-50 p-3 rounded-lg">
+                                    <h4 class="font-bold text-indigo-700 text-sm mb-1">Popular VPNs</h4>
+                                    <p class="text-gray-700 text-xs">ExpressVPN<br>Astrill<br>NordVPN<br>VyprVPN</p>
+                                </div>
+                                <div class="bg-indigo-50 p-3 rounded-lg">
+                                    <h4 class="font-bold text-indigo-700 text-sm mb-1">Local Apps</h4>
+                                    <p class="text-gray-700 text-xs">WeChat (微信)<br>Alipay (支付宝)<br>Didi (滴滴)<br>Meituan (美团)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-3">Opening Hours</h3>
+                            <ul class="space-y-3">
+                                <li class="flex">
+                                    <span class="font-bold text-gray-700 w-32">Government Sites:</span>
+                                    <span class="text-gray-600">Often closed Mondays</span>
+                                </li>
+                                <li class="flex">
+                                    <span class="font-bold text-gray-700 w-32">Museums:</span>
+                                    <span class="text-gray-600">Typically 9am-5pm</span>
+                                </li>
+                                <li class="flex">
+                                    <span class="font-bold text-gray-700 w-32">Shops/Malls:</span>
+                                    <span class="text-gray-600">10am-10pm daily</span>
+                                </li>
+                                <li class="flex">
+                                    <span class="font-bold text-gray-700 w-32">Restaurants:</span>
+                                    <span class="text-gray-600">Lunch 11:30-2pm, Dinner 5-9pm</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-3">Public Holidays</h3>
+                            <p class="text-gray-600 mb-3">Major holidays see massive domestic travel. Avoid traveling during:</p>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-calendar-day text-red-500 mr-2"></i>
+                                    <span class="text-gray-700">Chinese New Year (Jan/Feb)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-calendar-day text-red-500 mr-2"></i>
+                                    <span class="text-gray-700">National Day (Oct 1-7)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-calendar-day text-red-500 mr-2"></i>
+                                    <span class="text-gray-700">Labor Day (May 1-3)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact-page" class="page">
+        <div class="bg-gray-900 text-white py-16">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold mb-4">Contact Us</h1>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Have questions about visiting Beijing? Our local experts are here to help!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-16">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="bg-blue-600 text-white p-8 md:p-12">
+                        <h2 class="text-3xl font-bold mb-6">Get In Touch</h2>
+                        <p class="mb-6 text-blue-100">Whether you need itinerary advice, booking help, or local insights, we're happy to assist with your Beijing travel plans.</p>
+                        
+                        <div class="space-y-5">
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Email Us</h4>
+                                    <p>info@beijingexplorer.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-phone-alt text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Call Us</h4>
+                                    <p>+86 10 1234 5678</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold mb-1">Visit Us</h4>
+                                    <p>123 Tourism Street, Dongcheng District, Beijing</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-bold mb-4">Business Hours</h4>
+                            <div class="space-y-2 text-blue-100">
+                                <div class="flex justify-between max-w-xs">
+                                    <span>Monday-Friday</span>
+                                    <span>9:00am - 6:00pm</span>
+                                </div>
+                                <div class="flex justify-between max-w-xs">
+                                    <span>Saturday</span>
+                                    <span>10:00am - 4:00pm</span>
+                                </div>
+                                <div class="flex justify-between max-w-xs">
+                                    <span>Sunday</span>
+                                    <span>Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 md:p-12">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Send a Message</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label for="contact-name" class="block text-gray-700 mb-2">Name</label>
+                                <input type="text" id="contact-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label for="contact-email" class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" id="contact-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label for="contact-subject" class="block text-gray-700 mb-2">Subject</label>
+                                <select id="contact-subject" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>General Inquiry</option>
+                                    <option>Trip Planning Assistance</option>
+                                    <option>Group Tours</option>
+                                    <option>Website Feedback</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="contact-message" class="block text-gray-700 mb-2">Message</label>
+                                <textarea id="contact-message" rows="5" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" id="contact-newsletter" class="mr-2">
+                                <label for="contact-newsletter" class="text-gray-700">Subscribe to our newsletter for travel tips and deals</label>
+                            </div>
+                            
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full transition">
+                                Send Message <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-green-500 text-white p-6">
+                        <h2 class="text-xl font-bold">Tour Booking</h2>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Private Tours</h3>
+                                    <p class="text-gray-600 text-sm">Customized itineraries with English-speaking guides</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Small Group Tours</h3>
+                                    <p class="text-gray-600 text-sm">Join other travelers for popular attractions</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Special Interests</h3>
+                                    <p class="text-gray-600 text-sm">Food, photography, history, architecture-focused tours</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                            Book a Tour
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-purple-500 text-white p-6">
+                        <h2 class="text-xl font-bold">Travel Services</h2>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Visa Assistance</h3>
+                                    <p class="text-gray-600 text-sm">Guidance on Chinese visa requirements and applications</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Hotel Reservations</h3>
+                                    <p class="text-gray-600 text-sm">Best rates at hand-picked hotels in prime locations</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Transport Arrangements</h3>
+                                    <p class="text-gray-600 text-sm">Private drivers, airport transfers, train tickets</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                            Request Services
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-yellow-500 text-white p-6">
+                        <h2 class="text-xl font-bold">Corporate Services</h2>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-yellow-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Business Travel</h3>
+                                    <p class="text-gray-600 text-sm">Logistics support for corporate visitors</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-yellow-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Meeting Planning</h3>
+                                    <p class="text-gray-600 text-sm">Venue selection and coordination</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-yellow-500 mr-3 mt-1"></i>
+                                <div>
+                                    <h3 class="font-bold text-gray-800">Cultural Training</h3>
+                                    <p class="text-gray-600 text-sm">Pre-trip briefings on Chinese business etiquette</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition">
+                            Inquire Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Partners</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mb-8">We work with trusted local businesses to provide authentic Beijing experiences</p>
+                
+                <div class="flex flex-wrap justify-center gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center w-40 h-20">
+                        <span class="font-bold text-gray-700">Beijing Tourism</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center w-40 h-20">
+                        <span class="font-bold text-gray-700">CNTA</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center w-40 h-20">
+                        <span class="font-bold text-gray-700">UNESCO</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center w-40 h-20">
+                        <span class="font-bold text-gray-700">Hutongs Tours</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm flex items-center justify-center w-40 h-20">
+                        <span class="font-bold text-gray-700">Great Wall Guides</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-xl mb-4 flex items-center">
+                        <i class="fas fa-map-marked-alt text-blue-400 mr-2"></i>
+                        Beijing Explorer
+                    </h3>
+                    <p class="text-gray-400">Your comprehensive guide to experiencing the best of China's capital city since 2015.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition" onclick="showPage('home')">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition" onclick="showPage('activities')">Things to Do</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition" onclick="showPage('culture')">Culture Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition" onclick="showPage('tips')">Travel Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition" onclick="showPage('contact')">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Partners</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">Beijing Tourism Board</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">China National Tourism</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 transition">UNESCO Beijing</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-gray-800">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 Beijing Explorer. All rights reserved.</p>
+                    
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition">
+                            <i class="fab fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition">
+                            <i class="fab fa-weixin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-blue-600', 'font-medium');
+                link.classList.add('text-gray-600');
+            });
+            
+            // Highlight current nav link
+            const currentLinks = document.querySelectorAll(`[onclick="showPage('${pageId}')"]`);
+            currentLinks.forEach(link => {
+                link.classList.remove('text-gray-600');
+                link.classList.add('text-blue-600', 'font-medium');
+            });
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Activity Data
+        const activities = [
+            {
+                title: "Great Wall of China",
+                description: "Walk along the iconic ancient fortification with breathtaking views. Visit less crowded sections like Mutianyu or Jinshanling.",
+                image: "https://images.unsplash.com/photo-1518259102268-0bfa0df945e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "history",
+                duration: "Half day",
+                rating: 5,
+                price: "$$ (Entry + Transport)"
+            },
+            {
+                title: "Forbidden City",
+                description: "Explore the vast imperial palace complex that served Chinese emperors for nearly 500 years. Book tickets online in advance.",
+                image: "https://images.unsplash.com/photo-1547981609-10dfe29ac710?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "history",
+                duration: "3-4 hours",
+                rating: 5,
+                price: "$ (Entry)"
+            },
+            {
+                title: "Tiananmen Square",
+                description: "Visit one of the world's largest public squares with significant historical importance. Arrive early to avoid crowds.",
+                image: "https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2029&q=80",
+                category: "history",
+                duration: "1 hour",
+                rating: 4,
+                price: "Free"
+            },
+            {
+                title: "Temple of Heaven",
+                description: "Marvel at this architectural masterpiece where emperors prayed for good harvests. The surrounding park is perfect for people-watching.",
+                image: "https://images.unsplash.com/photo-1546436836-07e3b4c8a9e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "history",
+                duration: "2 hours",
+                rating: 4,
+                price: "$ (Entry)"
+            },
+            {
+                title: "Peking Duck Dinner",
+                description: "Indulge in Beijing's most famous dish - crispy skin duck served with pancakes, cucumber, and hoisin sauce. Try Quanjude or Da Dong for the best experience.",
+                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2089&q=80",
+                category: "food",
+                duration: "1.5 hours",
+                rating: 5,
+                price: "$$$"
+            },
+            {
+                title: "Hutongs Rickshaw Tour",
+                description: "Explore Beijing's traditional alleyways by rickshaw, discovering hidden courtyards and local life. Visit Nanluoguxiang for a mix of tradition and trendy shops.",
+                image: "https://images.unsplash.com/photo-1568832353149-b9de7d90cc76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "culture",
+                duration: "2-3 hours",
+                rating: 4,
+                price: "$$ (Tour)"
+            },
+            {
+                title: "798 Art District",
+                description: "Wander through this hip contemporary art zone in converted factory buildings, featuring galleries, cafes, and avant-garde sculptures.",
+                image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "modern",
+                duration: "Half day",
+                rating: 4,
+                price: "Free (Galleries vary)"
+            },
+            {
+                title: "Summer Palace",
+                description: "Enjoy leisurely walks around this vast imperial garden with a beautiful lake, pavilions and the famous Marble Boat.",
+                image: "https://images.unsplash.com/photo-1585502306946-a1d6fd32d245?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "nature",
+                duration: "Half day",
+                rating: 5,
+                price: "$ (Entry)"
+            },
+            {
+                title: "Silk Market Bargaining",
+                description: "Test your negotiation skills at this famous market for silk products, clothes, watches and souvenirs. Start bargaining at 30% of initial price!",
+                image: "https://images.unsplash.com/photo-1582567654679-0e8158ac8da9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80",
+                category: "culture",
+                duration: "2 hours",
+                rating: 3,
+                price: "$-$$"
+            },
+            {
+                title: "Beijing Opera",
+                description: "Experience traditional Chinese theater with elaborate costumes, acrobatics and unique singing styles. Try Liyuan Theatre for English subtitles.",
+                image: "https://images.unsplash.com/photo-1558908826-88abc0c9df69?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "culture",
+                duration: "1.5 hours",
+                rating: 4,
+                price: "$$ (Show + Drink)"
+            },
+            {
+                title: "Olympic Park",
+                description: "See the remarkable Bird's Nest stadium and Water Cube from the 2008 Olympics, spectacularly illuminated at night.",
+                image: "https://images.unsplash.com/photo-1578305770235-5d01a56d56c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "modern",
+                duration: "2 hours",
+                rating: 3,
+                price: "Free (Entry to venues extra)"
+            },
+            {
+                title: "Fragrant Hills Park",
+                description: "Hike through this stunning park, especially beautiful during autumn when maple leaves turn fiery red.",
+                image: "https://images.unsplash.com/photo-1600585790680-4cb0b8b0c8fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "nature",
+                duration: "Half day",
+                rating: 4,
+                price: "$ (Entry)"
+            },
+            {
+                title: "Beihai Park",
+                description: "This beautiful imperial garden features a large lake, the iconic White Dagoba, and traditional pavilions. Rent a boat to enjoy the scenery.",
+                image: "https://images.unsplash.com/photo-1552083974-186f191a2d7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "nature",
+                duration: "2-3 hours",
+                rating: 4,
+                price: "$ (Entry)"
+            },
+            {
+                title: "Lama Temple",
+                description: "Beijing's most famous Tibetan Buddhist temple features a massive 18-meter tall Buddha carved from a single sandalwood tree.",
+                image: "https://images.unsplash.com/photo-1527909740624-f9ae2b3a125a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "culture",
+                duration: "1-2 hours",
+                rating: 4,
+                price: "$ (Entry)"
+            },
+            {
+                title: "National Museum of China",
+                description: "One of the world's largest museums, showcasing China's history from prehistoric times to modern era. Free admission with passport.",
+                image: "https://images.unsplash.com/photo-1587238958091-8540b8b4a7cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                category: "history",
+                duration: "2-3 hours",
+                rating: 4,
+                price: "Free"
+            }
+        ];
+
+        // Load Activities
+        const activitiesContainer = document.getElementById('activities-container');
+        const fullActivitiesContainer = document.getElementById('full-activities-container');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+
+        function loadActivities(container, category = 'all') {
+            container.innerHTML = '';
+            
+            const filteredActivities = category === 'all' 
+                ? activities 
+                : activities.filter(activity => activity.category === category);
+            
+            filteredActivities.forEach(activity => {
+                const activityCard = document.createElement('div');
+                activityCard.className = 'activity-card bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col';
+                activityCard.setAttribute('data-category', activity.category);
+                
+                let stars = '';
+                for (let i = 0; i < 5; i++) {
+                    stars += i < activity.rating 
+                        ? '<i class="fas fa-star text-yellow-400"></i>' 
+                        : '<i class="far fa-star text-yellow-400"></i>';
+                }
+                
+                activityCard.innerHTML = `
+                    <div class="h-48 overflow-hidden">
+                        <img src="${activity.image}" alt="${activity.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-xl">${activity.title}</h3>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${activity.category.charAt(0).toUpperCase() + activity.category.slice(1)}</span>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            ${stars}
+                            <span class="text-gray-500 text-sm ml-2">${activity.rating}/5</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 flex-grow">${activity.description}</p>
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span><i class="far fa-clock mr-1"></i> ${activity.duration}</span>
+                            <span>${activity.price}</span>
+                        </div>
+                        <button class="mt-4 bg-blue-100 hover:bg-blue-200 text-blue-600 font-medium py-2 px-4 rounded-lg transition">
+                            Learn More <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(activityCard);
+            });
+        }
+
+        // Category Filter
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                
+                // Determine which container to update based on current page
+                const activePage = document.querySelector('.page.active').id;
+                if (activePage === 'home-page') {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    loadActivities(activitiesContainer, category);
+                } else if (activePage === 'activities-page') {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    loadActivities(fullActivitiesContainer, category);
+                }
+            });
+        });
+
+        // Initialize with all activities on both pages
+        document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+        loadActivities(activitiesContainer);
+        loadActivities(fullActivitiesContainer);
+    </script>
+</body>
+</html>
